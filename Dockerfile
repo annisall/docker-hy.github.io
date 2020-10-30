@@ -4,8 +4,6 @@ WORKDIR /tmp
 
 COPY Gemfile* ./
 
-COPY default.conf /etc/ngnix/conf.d/
-
 RUN bundle install
 
 WORKDIR /usr/src/app
@@ -17,6 +15,8 @@ RUN chown -R jekyll .
 RUN jekyll build
 
 FROM nginx:alpine
+
+COPY default.conf /etc/ngnix/conf.d/
 
 COPY --from=build-stage /usr/src/app/_site/ /usr/share/nginx/html
 
