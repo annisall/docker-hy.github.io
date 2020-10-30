@@ -21,8 +21,8 @@ jobs:
       - name: Push image to heroku container registry
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME}} web
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
       - name: Release
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME}} web
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
