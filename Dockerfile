@@ -18,4 +18,6 @@ FROM nginx:alpine
 
 COPY nginx.conf /etc/ngnix/conf.d/
 
+RUN sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
+
 COPY --from=build-stage /usr/src/app/_site/ /usr/share/nginx/html
