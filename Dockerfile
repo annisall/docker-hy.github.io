@@ -1,5 +1,7 @@
 FROM jekyll/jekyll:3.8.3 as build-stage
 
+ARG PORT
+
 WORKDIR /tmp
 
 COPY Gemfile* ./
@@ -20,10 +22,6 @@ FROM nginx:alpine
 
 COPY --from=build-stage /usr/src/app/_site/ /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.tmp
 
-RUN sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
-
-RUN cat /etc/nginx/nginx.conf
-
-RUN nginx -t
+CMD bin/sh -c envsubst '\$PORT' < /etc/nginx/nginx.conf.tmp > /etc/nginx/nginx.conf && cat /etc/nginx/nginx.conf && nginx -g 'daemon off;'
