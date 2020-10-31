@@ -6,6 +6,8 @@ COPY Gemfile* ./
 
 RUN bundle install
 
+RUN echo $PORT
+
 WORKDIR /usr/src/app
 
 COPY . .
@@ -16,8 +18,12 @@ RUN jekyll build
 
 FROM nginx:alpine
 
-COPY nginx.conf /etc/ngnix/conf.d/
-
-RUN sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
-
 COPY --from=build-stage /usr/src/app/_site/ /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
+
+RUN cat /etc/nginx/nginx.conf
+
+RUN nginx -t
